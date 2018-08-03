@@ -1,12 +1,10 @@
 <template>
   <div class="nav">
     <div class="nav-header">
-      <!-- <h3>Brightness & Contrast Developer Test</h3> -->
+      <h3>Brightness & Contrast Developer Test</h3>
       <p>{{date}}</p>
     </div>
-    <div>
       <img class="nav-image" src="../assets/beyond-the-valley.png" />
-    </div>
   </div>
 </template>
 
@@ -26,15 +24,17 @@ export default {
 
 <style scoped lang="scss">
   .nav {
-    max-width: 375px;
     color: #fff;
     background: $c-main-bg;
     margin: 0px;
-    padding: 0px;
-    &-header > h3, p {
-      margin: 0px;
+    &-header {
+      padding: $m-spacing * 2;
+      h3, p {
+        margin: 0px;
+      }
     }
     &-image {
+      display: block;
       width: 100%;
       margin: 0px;
     }
