@@ -3,11 +3,16 @@
         <p class="slider-title" :style="{color: colour}">{{title}}</p>
         <vue-slider
         tooltip="false"
-        :value.sync="sliderValue"
+        ref="slider"
+        :min="min"
+        :max="max"
+        :interval="interval"
+        v-model="sliderValue"
         :slider-style="{ 'box-shadow': 'none', background: colour, border: '2px solid #fff', 'box-sizing': 'border-box' }"
         :bg-style="{ background: `rgba(${colour}, 0.6)` }"
         :process-style="{ background: colour }"
         ></vue-slider>
+        <small>Slide to adjust image brightness!☀️</small>
     </div>
 </template>
 
@@ -15,15 +20,42 @@
 import vueSlider from 'vue-slider-component'
 
 export default {
-    props: ['title', 'colour'],
+    props: {
+        title: {
+            type: String
+        },
+        colour: {
+            type: String
+        },
+        min: {
+            type: Number,
+            required: true,
+            default: 0
+        },
+        max: {
+            type: Number,
+            required: true,
+            default: 100
+        },
+        interval: {
+            type: Number,
+            required: true,
+            default: 1
+        },
+    },
     components: {
         vueSlider
     },
     data () {
         return {
-            sliderValue: 50
+            sliderValue: 0
         }
-  },
+    },
+    watch: {
+        sliderValue: function() {
+            this.$emit('change', this.sliderValue)
+        }
+     }
 }
 </script>
 
@@ -31,9 +63,10 @@ export default {
     .slider {
         background: #FFFFFF;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
-        padding: $m-spacing * 2;;
-        margin-top: $m-spacing * 2;
+        border-radius: $border-radius;
+        padding: $m-spacing * 2;
+        margin: $m-spacing * 2 0px;
+        color: $c-text-main;
         &-title {
             font-weight: 700;
             margin: 0px;
