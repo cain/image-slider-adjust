@@ -1,6 +1,8 @@
 <template>
     <div class="slider">
-        <p class="slider-title" :style="{color: colour}">{{title}}</p>
+        <p class="slider-title" :style="{color: colour}">
+            {{ title }}
+        </p>
         <vue-slider
         tooltip="false"
         ref="slider"
@@ -8,11 +10,13 @@
         :max="max"
         :interval="interval"
         v-model="sliderValue"
-        :slider-style="{ 'box-shadow': 'none', background: colour, border: '2px solid #fff', 'box-sizing': 'border-box' }"
+        :slider-style="sliderStyle"
         :bg-style="{ background: `rgba(${colour}, 0.6)` }"
         :process-style="{ background: colour }"
         ></vue-slider>
-        <small>Slide to adjust image brightness!☀️</small>
+        <small>
+            {{ info }}
+        </small>
     </div>
 </template>
 
@@ -42,6 +46,9 @@ export default {
             required: true,
             default: 1
         },
+        info: {
+            type: String,
+        }
     },
     components: {
         vueSlider
@@ -55,7 +62,17 @@ export default {
         sliderValue: function() {
             this.$emit('change', this.sliderValue)
         }
-     }
+    },
+    computed: {
+        sliderStyle: function() {
+            return { 'box-shadow': 'none', background: this.colour, border: '2px solid #fff', 'box-sizing': 'border-box' }
+        }
+    },
+    methods: {
+        setValue: function(value) {
+            this.sliderValue = value;
+        }
+    }
 }
 </script>
 

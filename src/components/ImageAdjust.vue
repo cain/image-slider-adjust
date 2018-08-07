@@ -7,6 +7,7 @@
             :min="-40"
             :max="40"
             :interval="1"
+            info="Slide to adjust image brightness! ☀️"
         />
         <Slider v-if="imageSelected"
             title="Contrast"
@@ -15,6 +16,7 @@
             :min="-40"
             :max="40"
             :interval="1"
+            info="Slide to adjust image contrast! 🌓"
         />
         <Image-Upload
             v-on:imageSelected="onImageSelect"
@@ -42,7 +44,9 @@ export default {
     methods: {
         brightnessChange: function(v) { this.brightness = v },
         contrastChange: function(v) { this.contrast = v },
-        onImageSelect: function(v) { this.imageSelected = v }
+        onImageSelect: function(v) { 
+            this.imageSelected = v
+        }
     },
 }
 </script>

@@ -17,8 +17,18 @@
 </template>
 
 <script>
+import { editCanvas, drawImageScaled } from '../utils'
 export default {
-    props: ['contrast', 'brightness'],
+    props: {
+        contrast: {
+            type: Number,
+            required: true,
+        },
+        brightness: {
+            type: Number,
+            required: true,
+        }
+    },
     data() {
         return {
             width: 0,
@@ -33,13 +43,6 @@ export default {
         this.img = document.createElement("img");
     },
     methods: {
-        drawImageScaled: function(img, ctx) {
-            var canvas = ctx.canvas ;
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            ctx.canvas.width = img.width;
-            ctx.canvas.height = img.height;
-            ctx.drawImage(img, 0,0, img.width, img.height);
-        },
         previewThumbnail: function (event) {
             const input = event.target;
             if (input.files && input.files[0]) {
@@ -53,63 +56,25 @@ export default {
                 reader.readAsDataURL(input.files[0]);
 
                 this.img.onload = () => {
-                    this.drawImageScaled(this.img, this.ctx);
+                    drawImageScaled(this.img, this.ctx);
                     this.imageSelected = true;
                     this.$emit('imageSelected', this.imageSelected);
+                    if(this.contrast + this.brightness !== 0) {
+                        this.editImage();
+                    }
                 }
             }
         },
+        editImage: function () {
+            this.ctx.putImageData(editCanvas(this.ctx, this.img, this.contrast, this.brightness), 0, 0);
+        }
     },
     watch: {
         contrast: function() {
-            var canvas = this.ctx.canvas;
-            this.ctx.clearRect(0,0, canvas.width, canvas.height);
-            this.drawImageScaled(this.img, this.ctx);
-            
-            var adjust = Math.pow(parseInt(this.contrast + 100) / 100, 2);
-            const imgd = this.ctx.getImageData(0, 0, canvas.width, canvas.height)
-            var data = imgd.data,
-            nPixels = data.length,
-            red = 150,
-            green = 150,
-            blue = 150,
-            i;
-
-            for (i = 0; i < nPixels; i += 4) {
-                red = data[i];
-                green = data[i + 1];
-                blue = data[i + 2];
-
-                //Red channel
-                red /= 255;
-                red -= 0.5;
-                red *= adjust;
-                red += 0.5;
-                red *= 255;
-
-                //Green channel
-                green /= 255;
-                green -= 0.5;
-                green *= adjust;
-                green += 0.5;
-                green *= 255;
-
-                //Blue channel
-                blue /= 255;
-                blue -= 0.5;
-                blue *= adjust;
-                blue += 0.5;
-                blue *= 255;
-
-                red = red < 0 ? 0 : red > 255 ? 255 : red;
-                green = green < 0 ? 0 : green > 255 ? 255 : green;
-                blue = blue < 0 ? 0 : blue > 255 ? 255 : blue;
-
-                data[i] = red;
-                data[i + 1] = green;
-                data[i + 2] = blue;
-            }
-            this.ctx.putImageData(imgd, 0, 0);
+            this.editImage()
+        },
+        brightness: function() {
+            this.editImage();
         }
     }
 }
@@ -122,7 +87,6 @@ export default {
 }
 
 .image {
-
     border: 1px solid #DCDEE4;
     border-radius: $border-radius;
     &-info {
