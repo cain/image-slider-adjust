@@ -1,8 +1,8 @@
 <template>
     <div class="slider">
-        <p class="slider-title" :style="{color: colour}">
+        <h3 class="slider-title" :style="{color: colour}">
             {{ title }}
-        </p>
+        </h3>
         <vue-slider
         tooltip="false"
         ref="slider"
@@ -65,7 +65,12 @@ export default {
     },
     computed: {
         sliderStyle: function() {
-            return { 'box-shadow': 'none', background: this.colour, border: '2px solid #fff', 'box-sizing': 'border-box' }
+            return {
+                'box-shadow': 'none',
+                background: this.colour,
+                border: '2px solid #fff',
+                'box-sizing': 'border-box'
+            }
         }
     },
     methods: {
@@ -83,9 +88,9 @@ export default {
         border-radius: $border-radius;
         padding: $m-spacing * 2;
         margin: $m-spacing * 2 0px;
-        color: $c-text-main;
+        text-align: center;
         &-title {
-            font-weight: 700;
+            font-weight: bold;
             margin: 0px;
         }
     }

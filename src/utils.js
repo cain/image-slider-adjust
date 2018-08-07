@@ -1,14 +1,18 @@
+
 export function editCanvas(ctx, img, contrast, brightness) {
   const canvas = ctx.canvas;
   ctx.clearRect(0,0, canvas.width, canvas.height);
   drawImageScaled(img, ctx);
   let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-  imageData = contrastCanvas(contrast, imageData)
-  return brightnessCanvas(brightness, imageData)
+  return contrastCanvas(contrast, brightnessCanvas(brightness, imageData))
 }
 
+/**
+ * @author KonvaJS https://github.com/konvajs/konva
+ * https://github.com/konvajs/konva/blob/master/src/filters/Contrast.js#L14
+ */
 
-export function contrastCanvas(contrast, imageData) {
+function contrastCanvas(contrast, imageData) {
   const adjust = Math.pow(parseInt(contrast + 100) / 100, 2);
   let data = imageData.data,
   nPixels = data.length,
@@ -62,18 +66,25 @@ export function drawImageScaled(img, ctx) {
     ctx.drawImage(img, 0,0, img.width, img.height);
 }
 
-export function brightnessCanvas(value, imageData) {
-  var
-	canvasPixelArray = imageData.data,
-	canvasPixelArrayLength = canvasPixelArray.length,
-	i = 0;
+/**
+ * @author Jonathan Neal <jonathantneal@hotmail.com>
+ * https://github.com/jonathantneal
+ * https://gist.github.com/jonathantneal/2053865
+ */
 
-	value = parseFloat(value) || 0;
+function brightnessCanvas(value, imageData) {
+  let
+  canvasPixelArray = imageData.data,
+	i = 0;
+  
+	const canvasPixelArrayLength = canvasPixelArray.length;
+
+	const trueVal = parseFloat(value) || 0;
 
 	for (; i < canvasPixelArrayLength; i += 4) {
-		canvasPixelArray[i] += value;
-		canvasPixelArray[i + 1] += value;
-		canvasPixelArray[i + 2] += value;
+		canvasPixelArray[i] += trueVal;
+		canvasPixelArray[i + 1] += trueVal;
+		canvasPixelArray[i + 2] += trueVal;
 	}
 
 	return imageData;
